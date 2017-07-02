@@ -1,0 +1,3 @@
+[submodule "libs/pyjwt"]
+	path = libs/pyjwt
+	url = https://github.com/jpadilla/pyjwt.git
