@@ -74,6 +74,7 @@ class Event(BaseModel):
     _serialized_fields = ['created', 'place', 'name',
                           'time', 'attendees']
 
+    # owner = Parent entity and thus not included in the model
     place = ndb.StringProperty(required=True)
     name = ndb.StringProperty(required=True)
     time = ndb.DateTimeProperty(required=True)
@@ -83,8 +84,9 @@ class Invite(BaseModel):
 
     _serialized_fields = ['created', 'modified', 'sender_id']
 
-    recipient = ndb.KeyProperty(required=True)
+    # recipient = Parent entity and thus not included in the model
     sender = ndb.KeyProperty(required=True)
+    event = ndb.KeyProperty(required=True)
     state = ndb.StringProperty(choices=['pending', 'accepted', 'rejected'],
                                default='pending')
 

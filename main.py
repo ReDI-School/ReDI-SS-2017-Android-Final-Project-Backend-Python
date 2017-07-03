@@ -11,8 +11,8 @@ from webapp2_extras.routes import DomainRoute
 # Controllers and handlers
 from controllers.sessions import AuthenticateController
 from controllers.users import UserController, MeController
-from controllers.events import EventController
-from controllers.invites import InviteController, InviteActionController
+from controllers.events import EventController, SingleEventController
+from controllers.invites import InviteController, SingleInviteController
 
 # Requested URLs that are not listed here,
 # will return 404
@@ -40,7 +40,7 @@ ROUTES = [
             Route(r'', handler=EventController, name='events',
                   methods=['GET', 'POST', 'OPTIONS']),
 
-            Route(r'/<event_id_str:\d+>', handler=EventController,
+            Route(r'/<event_id_str:\d+>', handler=SingleEventController,
                   name='events', methods=['GET', 'DELETE', 'OPTIONS']),
         ]),
 
@@ -52,11 +52,11 @@ ROUTES = [
 
             routes.PathPrefixRoute(r'/<invite_id_str:\d+>', [
 
-                Route(r'', handler=InviteController,
+                Route(r'', handler=SingleInviteController,
                       name='invites', methods=['GET', 'DELETE', 'OPTIONS']),
 
-                Route(r'/<invite_action:\s+>', handler=InviteActionController,
-                      name='bookings', methods=['POST', 'OPTIONS'])
+                Route(r'/<invite_action:\s+>', handler=SingleInviteController,
+                      name='invites', methods=['POST', 'OPTIONS'])
             ]),
         ]),
     ])
