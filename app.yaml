@@ -1,0 +1,57 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+
+inbound_services:
+  - warmup
+
+
+handlers:
+
+- url: /robots\.txt
+  static_files: robots.txt
+  upload: robots\.txt
+
+
+# Task queues & scheduled tasks
+
+- url: /tasks/.*
+  script: main.tasks
+  login: admin
+  secure: always
+
+
+# Webapp
+
+- url: /.*
+  script: main.app
+  secure: always
+
+
+libraries:
+
+- name: webapp2
+  version: "2.5.1"
+
+- name: jinja2
+  version: "2.6"
+
+- name: ssl
+  version: latest
+
+- name: pycrypto
+  version: "2.6"
+
+
+skip_files:
+- ^README.md
+- ^\.gitignore
+- ^\.gitmodules
+- ^\.git/.*
+- ^(.*/)?#.*#$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?.*~$
+- ^(.*/)?\..*$
+- ^(.*/)?\.paw$
