@@ -9,9 +9,6 @@ from util import open_id
 
 from model.model import UserData
 
-CLIENT_ID = '644454183230-2r2qsadvekp26l5ii7trbl3aftan6f6q' \
-            '.apps.googleusercontent.com'
-
 ID_TOKEN_INFO_ENDPOINT = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
 GOOGLE_ACCOUNTS_ISS = ['accounts.google.com', 'https://accounts.google.com']
 
@@ -33,7 +30,7 @@ class AuthenticateController(base.BaseHandler):
     def process_provider_token(self, provider, id_token):
 
         try:
-            idinfo = open_id.verify_id_token(id_token, CLIENT_ID)
+            idinfo = open_id.verify_id_token(id_token, config.client_id)
         except:
             return None
 

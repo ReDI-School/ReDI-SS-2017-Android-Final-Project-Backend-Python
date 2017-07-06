@@ -31,4 +31,4 @@ class MeController(base.BaseHandler):
 
     @login_required
     def get(self):
-        self.respond(200, self.current_user())
+        self.respond(200, self.current_user)

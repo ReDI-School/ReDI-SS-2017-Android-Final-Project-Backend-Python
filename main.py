@@ -40,8 +40,14 @@ ROUTES = [
             Route(r'', handler=EventController, name='events',
                   methods=['GET', 'POST', 'OPTIONS']),
 
-            Route(r'/<event_id_str:\d+>', handler=SingleEventController,
-                  name='events', methods=['GET', 'DELETE', 'OPTIONS']),
+            routes.PathPrefixRoute(r'/<event_id_str:\d+>', [
+
+                Route(r'', handler=SingleEventController,
+                      name='events', methods=['GET', 'DELETE', 'OPTIONS']),
+
+                Route(r'', handler=SingleEventController,
+                      name='events', methods=['POST', 'OPTIONS']),
+            ]),
         ]),
 
         # Invites
@@ -55,7 +61,7 @@ ROUTES = [
                 Route(r'', handler=SingleInviteController,
                       name='invites', methods=['GET', 'DELETE', 'OPTIONS']),
 
-                Route(r'/<invite_action:\s+>', handler=SingleInviteController,
+                Route(r'/<invite_action:\w+>', handler=SingleInviteController,
                       name='invites', methods=['POST', 'OPTIONS'])
             ]),
         ]),

@@ -86,7 +86,7 @@ def login_required(handler):
             ).get()
 
             if user_model is not None:
-                self.user_id = user_model.key.id()
+                self.current_user = user_model
                 return handler(self, *args, **kwargs)
 
         # Unauthorized if nothing matches
@@ -109,7 +109,7 @@ class BaseHandler(webapp2.RequestHandler):
 
         self.read_request()
         self.setup_response()
-        self.user_id = None
+        self.current_user = None
 
     def dispatch(self):
         if(self.validate()):
@@ -141,13 +141,6 @@ class BaseHandler(webapp2.RequestHandler):
     def options(self, **args):
         self.response.headers[ALLOW_HEADERS_HEADER] = ALLOWED_HEADERS
         self.response.status = 204
-
-    def current_user(self):
-        return UserData.get_by_id(self.user_id)
-
-    @webapp2.cached_property
-    def user(self):
-        return users.get_current_user()
 
     def respond(self, status_code, body=None, headers=None):
         self.response.status = status_code
