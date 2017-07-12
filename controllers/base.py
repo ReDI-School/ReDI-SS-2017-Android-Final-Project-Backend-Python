@@ -90,9 +90,7 @@ def login_required(handler):
                 return handler(self, *args, **kwargs)
 
         # Unauthorized if nothing matches
-        return handler(self, *args, **kwargs)
-        # TODO Include Auth!
-        # self.respond(401)
+        self.respond(401)
 
     return check_login
 

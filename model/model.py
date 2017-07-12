@@ -102,7 +102,7 @@ class Event(BaseModel):
     def user_is_allowed(self, user):
         return (
             self.user_is_owner(user) or
-            Invite.query(ancestor=user.key).filter(Invite.event == self))
+            Invite.query(ancestor=user.key).filter(Invite.event == self.key))
 
 
 class EventUserStatus(BaseModel):

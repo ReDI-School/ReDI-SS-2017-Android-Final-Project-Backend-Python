@@ -35,7 +35,7 @@ class EventController(base.BaseHandler):
         my_invites = Invite.query(
             ancestor=self.current_user.key).filter(Invite.state == 'accepted')
 
-        event_keys = [invite.event.key for invite in my_invites]
+        event_keys = [invite.event for invite in my_invites]
         events_user_is_invited_to = ndb.get_multi(event_keys)
 
         # Merge results and respond
