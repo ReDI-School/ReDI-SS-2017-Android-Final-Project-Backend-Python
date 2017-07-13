@@ -76,7 +76,7 @@ class UserData(BaseModel):
 class Event(BaseModel):
 
     _DEFAULT_EVENTS_BUCKET = ndb.Key('Bucket', 'default')
-    _serialized_fields = ['created', 'place', 'name', 'time']
+    _serialized_fields = ['owner', 'created', 'place', 'name', 'time']
 
     owner = ndb.KeyProperty(required=True)
     place = ndb.StringProperty(required=True)
