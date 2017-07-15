@@ -54,9 +54,10 @@ def get_profile_info_from_auth_code(auth_code):
 
     scopes = ['profile', 'email']
     credentials = client.credentials_from_code(
-        config.client_id, config.client_secret, scopes, auth_code)
+        config.client_id, config.client_secret, scopes, auth_code,
+        redirect_uri=config.redirect_uri)
 
-    access_token = credentials.get_access_token()
+    access_token = credentials.get_access_token()[0]
     return get_profile_info_from_access_token(access_token)
 
 
