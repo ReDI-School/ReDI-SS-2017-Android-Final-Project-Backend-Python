@@ -1,3 +1,4 @@
+import config
 import json
 import urllib
 
@@ -49,7 +50,18 @@ def verify_id_token(id_token, audience, http=None,
             'Status code: {0}'.format(certs_request.status_code))
 
 
-def get_profile_info(access_token, provider=PROFILE_INFO_GOOGLE):
+def get_profile_info_from_auth_code(auth_code):
+
+    scopes = ['profile', 'email']
+    credentials = client.credentials_from_code(
+        config.client_id, config.client_secret, scopes, auth_code)
+
+    access_token = credentials.get_access_token()
+    return get_profile_info_from_access_token(access_token)
+
+
+def get_profile_info_from_access_token(access_token,
+                                       provider=PROFILE_INFO_GOOGLE):
 
     user_info_url = USER_INFO_URLS[provider]
     params = {

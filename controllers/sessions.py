@@ -13,7 +13,8 @@ GOOGLE_ACCOUNTS_ISS = ['accounts.google.com', 'https://accounts.google.com']
 
 PROVIDER_FIELD = 'provider'
 ID_TOKEN_FIELD = 'id_token'
-ACCESS_TOKEN_FIELD = 'access_token'
+ACCEESS_TOKEN_FIELD = 'access_token'
+AUTH_CODE_FIELD = 'auth_code'
 EMAIL_FIELD = 'email'
 
 INVALID_TOKEN = base.VALIDATION_ERROR + '.invalid_token'
@@ -24,8 +25,7 @@ UNAUTHORIZED_EMAIL = base.API_ERROR + '.email_not_authorized'
 
 class AuthenticateController(base.BaseHandler):
 
-    _post_mandatory_fields = (
-        PROVIDER_FIELD, ID_TOKEN_FIELD, ACCESS_TOKEN_FIELD)
+    _post_mandatory_fields = (PROVIDER_FIELD, ID_TOKEN_FIELD)
 
     def process_provider_token(self, provider, id_token):
 
@@ -48,7 +48,8 @@ class AuthenticateController(base.BaseHandler):
     def post(self):
 
         id_token = self.inputBody.get(ID_TOKEN_FIELD)
-        access_token = self.inputBody.get(ACCESS_TOKEN_FIELD)
+        auth_code = self.inputBody.get(AUTH_CODE_FIELD)
+        access_token = self.inputBody.get(ACCEESS_TOKEN_FIELD)
         provider = self.inputBody.get(PROVIDER_FIELD)
 
         result = self.process_provider_token(provider, id_token)
@@ -64,7 +65,7 @@ class AuthenticateController(base.BaseHandler):
 
             if user is None:
                 user = self._create_user(
-                    subject_id, email, provider, access_token)
+                    subject_id, email, provider, auth_code, access_token)
 
             self.respond(200, user.me())
 
@@ -72,9 +73,13 @@ class AuthenticateController(base.BaseHandler):
             self.respond(422, {base.ERRORS: {EMAIL_FIELD: INVALID_TOKEN}})
 
     @staticmethod
-    def _create_user(subject_id, email, provider, access_token):
+    def _create_user(subject_id, email, provider,
+                     auth_code=None, access_token=None):
 
-        # Fetch user info
-        user_data = open_id.get_profile_info(access_token)
+        if auth_code is not None:
+            user_data = open_id.get_profile_info_from_auth_code(auth_code)
+
+        if access_token is not None:
+            user_data = open_id.get_profile_info_from_access_token(access_token)
 
         return UserData.create_user(subject_id, email, provider, user_data)
