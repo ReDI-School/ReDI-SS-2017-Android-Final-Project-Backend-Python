@@ -25,7 +25,8 @@ UNAUTHORIZED_EMAIL = base.API_ERROR + '.email_not_authorized'
 
 class AuthenticateController(base.BaseHandler):
 
-    _post_mandatory_fields = (PROVIDER_FIELD, ID_TOKEN_FIELD)
+    _post_mandatory_fields = (
+        PROVIDER_FIELD, ID_TOKEN_FIELD, ACCESS_TOKEN_FIELD)
 
     def process_provider_token(self, provider, id_token):
 
@@ -64,7 +65,7 @@ class AuthenticateController(base.BaseHandler):
 
             if user is None:
                 user = self._create_user(
-                    subject_id, email, provider, access_token, id_token)
+                    subject_id, email, provider, access_token)
 
             self.respond(200, user.me())
 
@@ -72,10 +73,9 @@ class AuthenticateController(base.BaseHandler):
             self.respond(422, {base.ERRORS: {EMAIL_FIELD: INVALID_TOKEN}})
 
     @staticmethod
-    def _create_user(subject_id, email, provider, access_token, id_token):
+    def _create_user(subject_id, email, provider, access_token):
 
         # Fetch user info
-        user_data = open_id.get_profile_info(
-            id_token, access_token, open_id.PROFILE_INFO_GOOGLE)
+        user_data = open_id.get_profile_info(access_token)
 
         return UserData.create_user(subject_id, email, provider, user_data)

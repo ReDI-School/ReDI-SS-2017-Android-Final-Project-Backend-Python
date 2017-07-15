@@ -9,6 +9,11 @@ from libs.oauth2client import crypt
 from libs.oauth2client.client import VerifyJwtTokenError
 
 PROFILE_INFO_GOOGLE = 'google'
+SCOPES_OPENID_EMAIL_PROFILE = 'openid email profile'
+
+USER_INFO_URLS = {
+    PROFILE_INFO_GOOGLE: 'https://www.googleapis.com/oauth2/v3/userinfo'
+}
 
 
 def verify_id_token(id_token, audience, http=None,
@@ -40,14 +45,20 @@ def verify_id_token(id_token, audience, http=None,
         certs = json.loads(_helpers._from_bytes(certs_request.content))
         return crypt.verify_signed_jwt_with_certs(id_token, certs, audience)
     else:
-        raise VerifyJwtTokenError('Status code: {0}'.format(certs_request.status_code))
+        raise VerifyJwtTokenError(
+            'Status code: {0}'.format(certs_request.status_code))
 
 
-def get_profile_info(id_token, access_token, provider=PROFILE_INFO_GOOGLE):
+def get_profile_info(access_token, provider=PROFILE_INFO_GOOGLE):
 
-    params = {'id_token': id_token, 'access_token': access_token}
+    user_info_url = USER_INFO_URLS[provider]
+    params = {
+        'scope': SCOPES_OPENID_EMAIL_PROFILE,
+        'access_token': access_token
+    }
+
     response = urlfetch.fetch(
-        url='https://www.googleapis.com/oauth2/v3/userinfo?%s' % urllib.urlencode(params),
+        url='{}?{}'.format(user_info_url, urllib.urlencode(params)),
         method=urlfetch.POST,
         headers={'Content-Type': 'application/json'})
 

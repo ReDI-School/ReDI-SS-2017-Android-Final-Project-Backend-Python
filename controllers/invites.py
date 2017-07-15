@@ -76,7 +76,7 @@ class InviteController(base.BaseHandler):
             errors[RECIPIENT_ID_FIELD] = base.VALIDATION_ERROR + ".not_found"
 
         event_id = self.inputBody.get(EVENT_ID_FIELD)
-        event = Event.get_by_id(int(event_id))
+        event = Event.get_by_id(event_id)
         if event is None:
             errors[EVENT_ID_FIELD] = base.VALIDATION_ERROR + ".not_found"
 
