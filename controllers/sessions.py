@@ -9,7 +9,6 @@ from util import open_id
 
 from model.model import UserData
 
-ID_TOKEN_INFO_ENDPOINT = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
 GOOGLE_ACCOUNTS_ISS = ['accounts.google.com', 'https://accounts.google.com']
 
 PROVIDER_FIELD = 'provider'
